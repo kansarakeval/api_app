@@ -26,44 +26,97 @@ class _NewsScreenState extends State<NewsScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("User"),
+          title: Text("News"),
           centerTitle: true,
         ),
-        body: providerw!.newsModel == null
-            ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: providerw!.newsModel!.articlesList!.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            "${providerw!.newsModel!.articlesList![index].sourceModel!.id}"),
-                        Text(
-                            "${providerw!.newsModel!.articlesList![index].sourceModel!.name}"),
-                        Text(
-                            "${providerw!.newsModel!.articlesList![index].title}"),
-                      ],
-                    ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Image.network(
-                          providerw!
-                                  .newsModel!.articlesList![index].urlToImage ??
-                              "https://media.istockphoto.com/id/1311148884/vector/abstract-globe-background.jpg?s=2048x2048&w=is&k=20&c=ZyHCcX0F_DVM-r_R_vG8OX_CqYLb-G16afTyaVGtB3o=",
-                          width: 100,
-                          height: 100,
-                        ),
-                        Text(
-                            "${providerw!.newsModel!.articlesList![index].publishedAt}"),
-                      ],
-                    ),
-                  );
-                },
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  country(name: "INDIA",nikname: "in"),
+                  country(name: "USA",nikname: "us"),
+                  country(name: "CANADA",nikname: "ca"),
+                  country(name: "Australia",nikname: "au"),
+                ],
               ),
+            ),
+            providerw!.newsModel == null
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: providerw!.newsModel!.articlesList!.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(5),
+                          height: 110,
+                          color: Colors.grey.shade300,
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: providerw!.newsModel!
+                                            .articlesList![index].urlToImage ==
+                                        null
+                                    ? Image.network(
+                                        "https://media.istockphoto.com/id/1311148884/vector/abstract-globe-background.jpg?s=2048x2048&w=is&k=20&c=ZyHCcX0F_DVM-r_R_vG8OX_CqYLb-G16afTyaVGtB3o=",
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.network(
+                                        "${providerw!.newsModel!.articlesList![index].urlToImage}",
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "${providerw!.newsModel!.articlesList![index].sourceModel!.name}",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    width: 200,
+                                    child: Text(
+                                      "${providerw!.newsModel!.articlesList![index].description}",
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+          ],
+        ),
       ),
+    );
+  }
+
+  ActionChip country({required String name,required String nikname }) {
+    return ActionChip(
+      label: Text(name),
+      onPressed: () {
+        providerr!.changCountry(nikname);
+        providerr!.getNewsData();
+      },
     );
   }
 }

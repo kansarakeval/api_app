@@ -20,9 +20,9 @@ class APIHelper {
   }
 
   //news
-  Future<NewsModel?> newsApiCall() async {
+  Future<NewsModel?> newsApiCall(String country) async {
     String apiLink =
-        "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=462c7412b507426585d7957aa32af462";
+        "https://newsapi.org/v2/top-headlines?country=$country&category=business&apiKey=462c7412b507426585d7957aa32af462";
 
     var response = await http.get(Uri.parse(apiLink));
     if (response.statusCode == 200) {
